@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+    var error = ViewData["Error"] as string;
+    var todo = ViewData["Todo"] as TodoDto;
+}
+
+@section Styles {
+    <link href="~/css/add.css" rel="stylesheet" />
+}
+
+<h1 class="display-4 mb-4 text-center">Edit Todo</h1>
+
+
+@if (error != null)
+{
+    <div class="alert alert-danger">@error</div>
+}
+else
+{
+    <form id="form-edit">
+        <input type="hidden" name="partitionKey" value="@todo.PartitionKey" />
+        <input type="hidden" name="rowKey" value="@todo.RowKey" />
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="@todo.Title" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" required>@todo.Description</textarea>
+        </div>
+
+        <div class="text-right">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+}
+
+
+@section Scripts {
+    <script src="~/js/edit.js"></script>
+}

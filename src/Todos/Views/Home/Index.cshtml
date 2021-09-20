@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+
+    var todosContinuationToken = ViewData["TodosContinuationToken"] as string;
+    var todosContinuationTokenSet = string.IsNullOrEmpty(todosContinuationToken);
+}
+
+@section Styles {
+    <link href="~/css/index.css" rel="stylesheet" />
+}
+
+<h1 class="display-4 mb-4 text-center">Todos</h1>
+
+<div class="text-right mb-3">
+    <a class="btn btn-primary" href="/todos/add">Add</a>
+</div>
+
+<div id="todo-list" class="todo-list" data-continuation-token="@todosContinuationToken">
+    @foreach (var item in ViewData["Todos"] as IReadOnlyCollection<TodoDto>)
+    {
+        <div class="todo" data-id="@item.PartitionKey">
+            <div class="todo__content">
+                <span class="todo__title">@item.Title</span>
+                <span class="todo__description">@item.Description</span>
+            </div>
+            <a class="btn btn-sm btn-warning mr-2" href="/todos/edit/@item.PartitionKey/@item.RowKey">Edit</a>
+            <button class="btn btn-sm btn-danger" onclick="deleteTodo('@item.PartitionKey', '@item.RowKey')">Delete</button>
+        </div>
+    }
+</div>
+
+<div id="btn-load-more" class="text-center" hidden="@todosContinuationTokenSet">
+    <button class="btn btn-primary" onclick="fetchNextPage()">
+        Load more Todos
+    </button>
+</div>
+
+<div id="msg-no-more-pages" class="text-center text-muted" hidden="@(!todosContinuationTokenSet)">
+    No more pages available
+</div>
+
+
+@section Scripts {
+    <script src="~/js/index.js"></script>
+}
